@@ -123,10 +123,10 @@
 <body>
   <main aria-live="polite">
     <p class="eyebrow">UNNCPA Autumn Recruitment</p>
-    <h1>线上招新<span class="mark">倒计时</span></h1>
-    <p class="deadline">截止时间：2026年9月23日 12:00</p>
+    <h1 id="title">线上招新<span class="mark">倒计时</span></h1>
+    <p class="deadline" id="dateLabel">截止时间：2026年9月23日 12:00</p>
 
-    <section class="timer" aria-label="线上招新倒计时">
+    <section class="timer" id="timer" aria-label="线上招新倒计时">
       <div class="unit">
         <span class="value" id="days">--</span>
         <span class="label">天</span>
@@ -149,8 +149,12 @@
   </main>
 
   <script>
+    const applicationStart = new Date("2026-08-04T00:00:00+08:00").getTime();
     const deadline = new Date("2026-09-23T12:00:00+08:00").getTime();
     const parts = {
+      title: document.getElementById("title"),
+      dateLabel: document.getElementById("dateLabel"),
+      timer: document.getElementById("timer"),
       days: document.getElementById("days"),
       hours: document.getElementById("hours"),
       minutes: document.getElementById("minutes"),
@@ -163,19 +167,35 @@
     }
 
     function render() {
-      const remaining = Math.max(0, deadline - Date.now());
+      const now = Date.now();
+      const target = now < applicationStart ? applicationStart : deadline;
+      const remaining = Math.max(0, target - now);
       const totalSeconds = Math.floor(remaining / 1000);
       const days = Math.floor(totalSeconds / 86400);
       const hours = Math.floor((totalSeconds % 86400) / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
+      if (now < applicationStart) {
+        parts.title.innerHTML = '线上招新<span class="mark">尚未开始</span>';
+        parts.dateLabel.textContent = "开放时间：2026年8月4日 00:00";
+        parts.timer.setAttribute("aria-label", "距离线上招新开放倒计时");
+        parts.message.textContent = "线上网申通道将于8月4日开放。在此之前，欢迎先慢慢了解心协，看看这里是不是你想靠近的地方。";
+      } else {
+        parts.title.innerHTML = '线上招新<span class="mark">倒计时</span>';
+        parts.dateLabel.textContent = "截止时间：2026年9月23日 12:00";
+        parts.timer.setAttribute("aria-label", "线上招新倒计时");
+        parts.message.textContent = "如果你还在了解我们，记得在截止前给自己一个尝试的机会。";
+      }
+
       parts.days.textContent = days;
       parts.hours.textContent = pad(hours);
       parts.minutes.textContent = pad(minutes);
       parts.seconds.textContent = pad(seconds);
 
-      if (remaining <= 0) {
+      if (now >= deadline) {
+        parts.title.innerHTML = '线上招新<span class="mark">已截止</span>';
+        parts.dateLabel.textContent = "截止时间：2026年9月23日 12:00";
         parts.message.textContent = "线上招新已截止。感谢你认真了解心协，也期待未来在活动中见到你。";
       }
     }
