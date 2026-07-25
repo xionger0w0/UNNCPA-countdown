@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UNNCPA 线上招新倒计时</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2933;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --sun: #fff176;
+      --blue: #0b4a6f;
+      --orange: #f28c28;
+      --paper: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    main {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 18px 18px 20px;
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 8vw, 38px);
+      line-height: 1.16;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .mark {
+      background: linear-gradient(transparent 46%, var(--sun) 46%);
+      padding: 0 0.08em;
+    }
+
+    .deadline {
+      margin: 8px 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .timer {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+      margin: 0 0 14px;
+    }
+
+    .unit {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 4px 9px;
+      text-align: center;
+      background: #fff;
+    }
+
+    .value {
+      display: block;
+      color: var(--blue);
+      font-size: clamp(24px, 9vw, 44px);
+      line-height: 1;
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0;
+    }
+
+    .label {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .note {
+      margin: 0;
+      padding-left: 12px;
+      border-left: 3px solid var(--orange);
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    @media (max-width: 360px) {
+      main { padding: 14px 12px 16px; }
+      .timer { gap: 5px; }
+      .value { font-size: 25px; }
+    }
+  </style>
+</head>
+<body>
+  <main aria-live="polite">
+    <p class="eyebrow">UNNCPA Autumn Recruitment</p>
+    <h1 id="title">线上招新<span class="mark">倒计时</span></h1>
+    <p class="deadline" id="dateLabel">截止时间：2026年9月23日 12:00</p>
+
+    <section class="timer" id="timer" aria-label="线上招新倒计时">
+      <div class="unit"><span class="value" id="days">--</span><span class="label">天</span></div>
+      <div class="unit"><span class="value" id="hours">--</span><span class="label">时</span></div>
+      <div class="unit"><span class="value" id="minutes">--</span><span class="label">分</span></div>
+      <div class="unit"><span class="value" id="seconds">--</span><span class="label">秒</span></div>
+    </section>
+
+    <p class="note" id="message">如果你还在了解我们，记得在截止前给自己一个尝试的机会。</p>
+  </main>
+
+  <script>
+    const applicationStart = new Date("2026-08-04T00:00:00+08:00").getTime();
+    const deadline = new Date("2026-09-23T12:00:00+08:00").getTime();
+    const parts = {
+      title: document.getElementById("title"),
+      dateLabel: document.getElementById("dateLabel"),
+      timer: document.getElementById("timer"),
+      days: document.getElementById("days"),
+      hours: document.getElementById("hours"),
+      minutes: document.getElementById("minutes"),
+      seconds: document.getElementById("seconds"),
+      message: document.getElementById("message")
+    };
+
+    function pad(value) { return String(value).padStart(2, "0"); }
+
+    function render() {
+      const now = Date.now();
+      const target = now < applicationStart ? applicationStart : deadline;
+      const remaining = Math.max(0, target - now);
+      const totalSeconds = Math.floor(remaining / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      if (now < applicationStart) {
+        parts.title.innerHTML = '线上招新<span class="mark">尚未开始</span>';
+        parts.dateLabel.textContent = "开放时间：2026年8月4日 00:00";
+        parts.timer.setAttribute("aria-label", "距离线上招新开放倒计时");
+        parts.message.textContent = "线上网申通道将于8月4日开放。在此之前，欢迎先慢慢了解心协，看看这里是不是你想靠近的地方。";
+      } else {
+        parts.title.innerHTML = '线上招新<span class="mark">倒计时</span>';
+        parts.dateLabel.textContent = "截止时间：2026年9月23日 12:00";
+        parts.timer.setAttribute("aria-label", "线上招新倒计时");
+        parts.message.textContent = "如果你还在了解我们，记得在截止前给自己一个尝试的机会。";
+      }
+
+      parts.days.textContent = days;
+      parts.hours.textContent = pad(hours);
+      parts.minutes.textContent = pad(minutes);
+      parts.seconds.textContent = pad(seconds);
+
+      if (now >= deadline) {
+        parts.title.innerHTML = '线上招新<span class="mark">已截止</span>';
+        parts.dateLabel.textContent = "截止时间：2026年9月23日 12:00";
+        parts.message.textContent = "线上招新已截止。感谢你认真了解心协，也期待未来在活动中见到你。";
+      }
+    }
+
+    render();
+    setInterval(render, 1000);
+  </script>
+</body>
+</html>
