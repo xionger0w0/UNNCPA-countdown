@@ -39,11 +39,11 @@ When developing locally, the second version was originally named `compact.html`.
 
 ## Feishu Link
 
-The GitHub Pages link for the selected version is:
+The GitHub Pages link is:
 
-https://xionger0w0.github.io/UNNCPA-countdown/v0.2.html
+https://xionger0w0.github.io/UNNCPA-countdown/
 
-This link can be inserted into Feishu as a webpage embed, link preview, or web card. For the recruitment knowledge base, v2 is the preferred version because it is easier to view on mobile.
+This link opens the selected compact version directly and can be inserted into Feishu as a webpage embed, link preview, or web card. For the recruitment knowledge base, v2 is preferred because it is easier to view on mobile. The legacy `v0.2.html` link continues to work.
 
 ## How to Update the Deadline
 
@@ -74,4 +74,3 @@ This keeps the page clear and presentable even if someone opens the link after t
 This is a small webpage, but it is a useful part of the recruitment workflow. I kept this README so that I, or future UNNCPA members, can quickly understand what each file is for and how to update the page when needed.
 
 If a similar countdown page is needed in the future, v2 can be reused by updating the deadline, title, and reminder message.
-
